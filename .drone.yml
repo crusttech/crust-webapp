@@ -8,19 +8,15 @@ steps:
       - name: webapp-build
         path: /var/build
     commands:
-      - sh collect.sh
+      - sh build.sh
 
   - name: build image
     image: plugins/docker
     settings:
       repo: ${DRONE_REPO_NAMESPACE}/${DRONE_REPO_NAME}
-      auto_tag: true # generate tag names automatically based on git branch and git tag
-      username:
-        from_secret: docker_hub_username
-      password:
-        from_secret: docker_hub_password
-
-trigger:
+      tags: [ "${APP_VERSION/master/latest}" ]
+      username: { from_secret: docker_hub_username }
+      password: { from_secret: docker_hub_password }
 
 volumes:
   - name: webapp-build
